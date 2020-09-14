@@ -1,5 +1,6 @@
 import React from "react";
 import { auth } from "../../firebase/firebase";
+
 const Navbar = (props) => {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-light">

@@ -127,7 +127,7 @@ app.post("/course", verifyToken, async (req, res) => {
 			submittedBy,
 		});
 		const savedCourse = await course.save();
-		sendMail(savedCourse.id);
+		// sendMail(savedCourse.id);
 		res.status(200).json({
 			message:
 				"Course details are sent for verification. Thanks for your Contibution.",
@@ -139,40 +139,40 @@ app.post("/course", verifyToken, async (req, res) => {
 	}
 });
 
-//Update The Rating of User and Course
-// app.patch("/update", verifyToken, async (req, res) => {
-// 	const { newCourseRating, userRating, courseId } = req.body;
-// 	const updatedUser = await Users.findByIdAndUpdate(
-// 		{ _id: req.user.id },
-// 		{
-// 			$push: {
-// 				ratedCourses: {
-// 					courseId: courseId,
-// 					rating: userRating,
-// 				},
-// 			},
-// 		}
-// 	).exec((err, post) => {
-// 		if (err) res.status(400).json({ error: "Unable to Rate Course" });
-// 		else {
-// Courses.updateOne(
-// 	{ id: courseId },
-// 	{
-// 		$set: {
-// 			rating: newCourseRating,
-// 		},
-// 	}
-// )
-// 	.then(() =>
-// 		res.status(200).json({ message: "Course Rated Successfully" })
-// 	)
-// 	.catch((err) =>
-// 		res.status(400).json({ error: "Unable to rate Course" })
-// 	);
-// 			res.status(200).json({ message: "Course Rated Successfully" });
-// 		}
-// 	});
-// });
+// Update The Rating of User and Course
+app.patch("/update", verifyToken, async (req, res) => {
+	const { newCourseRating, userRating, courseId } = req.body;
+	const updatedUser = await Users.findByIdAndUpdate(
+		{ _id: req.user.id },
+		{
+			$push: {
+				ratedCourses: {
+					courseId: courseId,
+					rating: userRating,
+				},
+			},
+		}
+	).exec((err, post) => {
+		if (err) res.status(400).json({ error: "Unable to Rate Course" });
+		else {
+			Courses.updateOne(
+				{ id: courseId },
+				{
+					$set: {
+						rating: newCourseRating,
+					},
+				}
+			)
+				.then(() =>
+					res.status(200).json({ message: "Course Rated Successfully" })
+				)
+				.catch((err) =>
+					res.status(400).json({ error: "Unable to rate Course" })
+				);
+			res.status(200).json({ message: "Course Rated Successfully" });
+		}
+	});
+});
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static("client/build"));
