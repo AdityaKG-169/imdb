@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
 import "./App.css";
 import PageNotFound from "./Pages/PageNotFound/PageNotFound";
-import { signInWithGoogle, auth } from "./firebase/firebase";
+import { auth } from "./firebase/firebase";
 
 class App extends React.Component {
 	constructor() {
@@ -13,33 +13,56 @@ class App extends React.Component {
 		};
 	}
 
-	componentDidMount() {
-		console.log(this.state);
-	}
+	isUserThere = false;
 
-	handleLogin = () => {
-		signInWithGoogle();
+	componentDidMount() {
+		const token = window.localStorage.getItem("token");
 		auth.onAuthStateChanged((user) => {
-			if (user) {
+			if (!user) this.setState({ currentUser: null });
+			this.isUserThere = user ? true : false;
+			if (this.isUserThere) {
+				if (token) window.localStorage.removeItem("token");
 				const { email, uid } = user;
-				this.setState(
-					{
-						currentUser: [email, uid],
-					},
-					() => console.log(this.state)
-				);
+				const googleId = uid;
+				fetch("https://courses-imdb-backend.herokuapp.com/user", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ email, googleId }),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						this.setState(
+							{
+								currentUser: true,
+							},
+							() => {
+								if (data.message) alert(data.message);
+								if (data.error) {
+									alert(data.error);
+									return;
+								}
+								window.localStorage.setItem("token", data.token);
+							}
+						);
+					});
 			} else {
-				this.setState({
-					currentUser: null,
-				});
+				if (token) {
+					window.localStorage.removeItem("token");
+				} else {
+					return;
+				}
 			}
 		});
-	};
+	}
+
+	componentWillUnmount() {
+		this.isUserThere = false;
+	}
 
 	render() {
 		return (
 			<div className="App">
-				<Navbar login={() => this.handleLogin()} />
+				<Navbar user={this.state.currentUser} />
 				<Switch>
 					<Route component={PageNotFound} path="*" />
 				</Switch>

@@ -1,5 +1,5 @@
 import React from "react";
-import { auth } from "../../firebase/firebase";
+import { auth, signInWithGoogle } from "../../firebase/firebase";
 
 const Navbar = (props) => {
 	return (
@@ -34,20 +34,23 @@ const Navbar = (props) => {
 				<button type="button" className="btn btn-outline-success">
 					Add A Course
 				</button>
-				<button
-					type="button"
-					className="btn btn-primary"
-					onClick={() => props.login()}
-				>
-					Login
-				</button>
-				<button
-					type="button"
-					className="btn btn-primary"
-					onClick={() => auth.signOut()}
-				>
-					Logout
-				</button>
+				{props.user ? (
+					<button
+						type="button"
+						className="btn btn-primary"
+						onClick={() => auth.signOut()}
+					>
+						Logout
+					</button>
+				) : (
+					<button
+						type="button"
+						className="btn btn-primary"
+						onClick={() => signInWithGoogle()}
+					>
+						Login
+					</button>
+				)}
 			</div>
 		</nav>
 	);

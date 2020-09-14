@@ -74,16 +74,14 @@ app.post("/user", async (req, res) => {
 	const { email, googleId } = req.body;
 	const isUserThere = await Users.findOne({ email });
 	try {
-		console.log(isUserThere);
 		const token = jwt.sign({ id: googleId }, process.env.TOKEN_SECRET);
-		if (isUserThere) return res.status(200).json({ token });
+		if (isUserThere)
+			return res.status(200).json({ message: "Welcome Back!", token });
 		const newUser = new Users({ email, googleId });
 		const savedUser = await newUser.save();
 		try {
-			console.log(savedUser);
 			res.status(200).json({ message: "User Created Successfully!", token });
 		} catch (err) {
-			console.log(err);
 			res
 				.status(400)
 				.json({ error: "Error While Making Request. Please Try Again" });
