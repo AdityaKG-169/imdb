@@ -1,5 +1,6 @@
 import React from "react";
 import { auth, signInWithGoogle } from "../../firebase/firebase";
+import NavSearchbox from "../NavSearchbox/NavSearchbox";
 
 const Navbar = (props) => {
 	return (
@@ -20,17 +21,7 @@ const Navbar = (props) => {
 			</button>
 
 			<div className="collapse navbar-collapse" id="navbarColor03">
-				<ul className="navbar-nav mr-auto">
-					<li className="nav-item active">
-						<form className="form-inline my-2 my-lg-0">
-							<input
-								className="form-control mr-sm-2"
-								type="text"
-								placeholder="Search"
-							/>
-						</form>
-					</li>
-				</ul>
+				<NavSearchbox />
 				<button type="button" className="btn btn-outline-success">
 					Add A Course
 				</button>

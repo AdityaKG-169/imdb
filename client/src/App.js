@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
 import "./App.css";
+import Homepage from "./Pages/Homepage/Homepage";
 import PageNotFound from "./Pages/PageNotFound/PageNotFound";
 import { auth } from "./firebase/firebase";
 
@@ -64,6 +65,7 @@ class App extends React.Component {
 			<div className="App">
 				<Navbar user={this.state.currentUser} />
 				<Switch>
+					<Route component={Homepage} path="/" />
 					<Route component={PageNotFound} path="*" />
 				</Switch>
 			</div>

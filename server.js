@@ -61,7 +61,9 @@ app.get("/allusers", async (req, res) => {
 
 // Search from database
 app.get("/course/:query", async (req, res) => {
-	const courses = await Courses.fuzzySearch(req.params.query);
+	const courses = await Courses.fuzzySearch(req.params.query)
+		.sort(confidenceScore)
+		.limit(5);
 	try {
 		res.json(courses);
 	} catch (err) {

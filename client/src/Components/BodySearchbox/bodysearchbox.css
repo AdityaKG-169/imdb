@@ -1,0 +1,28 @@
+.hero-section__search-container {
+  background-color: white;
+  width: 450px;
+}
+
+.hero-section__search-container .search-container__heading {
+  font-size: 32px;
+  font-weight: 600;
+  color: black;
+}
+
+.hero-section__search-container .search-container__sub-heading {
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 300;
+}
+
+.hero-section__search-container .search-container__add-course {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 300;
+}
+
+.hero-section__search-container .search-container__add-course .add-course__text-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+/*# sourceMappingURL=bodysearchbox.css.map */
