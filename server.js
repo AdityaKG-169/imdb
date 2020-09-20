@@ -7,7 +7,7 @@ const PORT = process.env.PORT;
 const Users = require("./models/Users");
 const Courses = require("./models/Courses");
 const jwt = require("jsonwebtoken");
-const sendMail = require("./mailScript");
+// const sendMail = require("./mailScript");
 
 const app = express();
 app.use(bodyParser.json());
@@ -59,11 +59,9 @@ app.get("/allusers", async (req, res) => {
 	}
 });
 
-// Search from database
+// Search courses from database
 app.get("/course/:query", async (req, res) => {
-	const courses = await Courses.fuzzySearch(req.params.query)
-		.sort(confidenceScore)
-		.limit(5);
+	const courses = await Courses.fuzzySearch(req.params.query);
 	try {
 		res.json(courses);
 	} catch (err) {
@@ -136,6 +134,32 @@ app.post("/course", verifyToken, async (req, res) => {
 		res
 			.status(400)
 			.json({ error: "Unable to Add The Course. Please Try Again." });
+	}
+});
+
+//Get List of domains
+app.get("/courses/domains", async (req, res) => {
+	const domains = await Courses.find({}).select("domain");
+	try {
+		res.status(200).json({ message: domains });
+	} catch (err) {
+		res
+			.status(400)
+			.json({ error: "Error Getting Domains. Please try again later" });
+	}
+});
+
+//Get List of Subdomains
+app.get("/courses/subdomains/:domain", async (req, res) => {
+	const subDomains = await Courses.find({ domain: req.params.domain }).select(
+		"subDomain"
+	);
+	try {
+		res.status(200).json({ message: subDomains });
+	} catch (err) {
+		res
+			.status(400)
+			.json({ error: "Error Getting Domains. Please try again later" });
 	}
 });
 

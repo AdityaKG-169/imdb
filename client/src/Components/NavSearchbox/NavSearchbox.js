@@ -41,7 +41,6 @@ class NavSearchbox extends React.Component {
 	render() {
 		return (
 			<ul className="navbar-nav mr-auto">
-				{console.log(this.state)}
 				<li className="nav-item active">
 					<input
 						className="form-control mr-sm-2"
