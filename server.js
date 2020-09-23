@@ -198,13 +198,15 @@ app.patch("/update", verifyToken, async (req, res) => {
 	});
 });
 
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static("client/build"));
-	const path = require("path");
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-	});
-}
+// if (process.env.NODE_ENV === "production") {
+// 	app.use(express.static("client/build"));
+// 	const path = require("path");
+// 	app.get("*", (req, res) => {
+// 		res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+// 	});
+// }
+
+// "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
 
 mongoose.connection.on("open", () => console.log("Database Connected"));
 
