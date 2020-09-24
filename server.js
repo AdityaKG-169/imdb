@@ -30,10 +30,12 @@ const verifyToken = async (req, res, next) => {
 			return res
 				.status(401)
 				.json({ error: "You Must be Logged In to Continue" });
-		const { googleId } = payload;
-		const fetchedUser = await Users.findOne(googleId);
+		const { id } = payload;
+		console.log(id, "Hello1");
+		const fetchedUser = await Users.findById(id);
 		try {
 			req.user = fetchedUser;
+			console.log(req.user.id, "Hello2");
 			next();
 		} catch (err) {
 			res.status(400).json({ error: "Unable to Verify User." });
@@ -74,7 +76,8 @@ app.post("/user", async (req, res) => {
 	const { email, googleId } = req.body;
 	const isUserThere = await Users.findOne({ email });
 	try {
-		const token = jwt.sign({ id: googleId }, process.env.TOKEN_SECRET);
+		console.log(isUserThere.id, "Hello3");
+		const token = jwt.sign({ id: isUserThere.id }, process.env.TOKEN_SECRET);
 		if (isUserThere)
 			return res.status(200).json({ message: "Welcome Back!", token });
 		const newUser = new Users({ email, googleId });
@@ -201,15 +204,16 @@ app.patch("/update", verifyToken, async (req, res) => {
 // Update Reward Domain
 app.patch("/chosereward", verifyToken, async (req, res) => {
 	try {
+		console.log(req.user, "Hello4");
 		chosenReward = await Users.updateOne(
-			{ googleId: req.user.googleId },
+			{ id: req.user.id },
 			{
 				$set: {
 					rewardDomain: req.body.rewardDomain,
 				},
 			}
 		);
-		res.status(200).json({ message: req.user.googleId });
+		res.status(200).json({ message: req.user.id });
 	} catch (err) {
 		res
 			.status(400)
