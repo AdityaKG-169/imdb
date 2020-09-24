@@ -209,7 +209,7 @@ app.patch("/chosereward", verifyToken, async (req, res) => {
 				},
 			}
 		);
-		res.status(200).json({ message: "Domain Selected Successfully!" });
+		res.status(200).json({ message: req.user.googleId });
 	} catch (err) {
 		res
 			.status(400)
