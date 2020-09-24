@@ -202,7 +202,7 @@ app.patch("/update", verifyToken, async (req, res) => {
 app.patch("/chosereward", verifyToken, async (req, res) => {
 	try {
 		chosenReward = await Users.updateOne(
-			{ _id: req.user.id },
+			{ googleId: req.user.id },
 			{
 				$set: {
 					rewardDomain: req.body.rewardDomain,
