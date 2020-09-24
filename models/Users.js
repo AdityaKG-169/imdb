@@ -10,6 +10,10 @@ const Users = new Schema({
 		type: String,
 		required: true,
 	},
+	rewardDomain: {
+		type: String,
+		default: null,
+	},
 	ratedCourses: [
 		{
 			courseId: {

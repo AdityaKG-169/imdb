@@ -3,11 +3,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const PORT = process.env.PORT;
 const Users = require("./models/Users");
 const Courses = require("./models/Courses");
 const jwt = require("jsonwebtoken");
-// const sendMail = require("./mailScript");
+
+// const sendMail = require("./mailScript");s
 
 const app = express();
 app.use(bodyParser.json());
@@ -198,6 +198,28 @@ app.patch("/update", verifyToken, async (req, res) => {
 	});
 });
 
+app.patch("/chosereward", verifyToken, async (req, res) => {
+	try {
+		chosenReward = await Users.updateOne(
+			{ _id: req.user.id },
+			{
+				$set: {
+					rewardDomain: req.body.rewardDomain,
+				},
+			}
+		);
+		res.status(200).json({ message: "Domain Selected Successfully!" });
+	} catch (err) {
+		res
+			.status(400)
+			.json({ error: "Unable to Select Domain. Please try again!" });
+	}
+});
+
+mongoose.connection.on("open", () => console.log("Database Connected"));
+
+app.listen(4001, () => console.log(`Server is running on port 4000`));
+
 // if (process.env.NODE_ENV === "production") {
 // 	app.use(express.static("client/build"));
 // 	const path = require("path");
@@ -207,7 +229,3 @@ app.patch("/update", verifyToken, async (req, res) => {
 // }
 
 // "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
-
-mongoose.connection.on("open", () => console.log("Database Connected"));
-
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
