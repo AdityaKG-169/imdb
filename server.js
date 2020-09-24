@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const Users = require("./models/Users");
 const Courses = require("./models/Courses");
 const jwt = require("jsonwebtoken");
-
+const PORT = process.env.PORT || 8080;
 // const sendMail = require("./mailScript");s
 
 const app = express();
@@ -198,6 +198,7 @@ app.patch("/update", verifyToken, async (req, res) => {
 	});
 });
 
+// Update Reward Domain
 app.patch("/chosereward", verifyToken, async (req, res) => {
 	try {
 		chosenReward = await Users.updateOne(
@@ -216,9 +217,7 @@ app.patch("/chosereward", verifyToken, async (req, res) => {
 	}
 });
 
-mongoose.connection.on("open", () => console.log("Database Connected"));
-
-app.listen(4001, () => console.log(`Server is running on port 4000`));
+app.listen(PORT);
 
 // if (process.env.NODE_ENV === "production") {
 // 	app.use(express.static("client/build"));
