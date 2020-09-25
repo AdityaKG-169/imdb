@@ -45,21 +45,51 @@ const verifyToken = async (req, res, next) => {
 	});
 };
 
-app.get("/allcourses", async (req, res) => {
+// Get list of all courses in Admin Pannel
+app.get("/admin/allcourses", verifyToken, async (req, res) => {
 	const courses = await Courses.find({});
 	try {
-		res.json(courses);
+		if (req.user.googleId === "RApgwKTGONMRo7D2VY9LZvUEggE2")
+			return res.status(200).json({ message: courses });
+		else return res.status(400).json({ error: "Unauthorized Route" });
 	} catch (err) {
-		res.json(err);
+		res.status(400).json({ error: err });
 	}
 });
 
-app.get("/allusers", async (req, res) => {
+// Get list of all Users in Admin Pannel
+app.get("/admin/allusers", verifyToken, async (req, res) => {
 	const users = await Users.find({});
 	try {
-		res.json(users);
+		if (req.user.googleId === "RApgwKTGONMRo7D2VY9LZvUEggE2")
+			return res.status(200).json({ message: users });
+		else return res.status(400).json({ error: "Unauthorized Route" });
 	} catch (err) {
-		res.json(err);
+		res.status(400).json({ error: err });
+	}
+});
+
+// Get List of all the Bugs
+app.get("/admin/allbugs", verifyToken, async (req, res) => {
+	const bugs = await Bugs.find({});
+	try {
+		if (req.user.googleId === "RApgwKTGONMRo7D2VY9LZvUEggE2")
+			return res.status(200).json({ message: bugs });
+		else return res.status(400).json({ error: "Unauthorized Route" });
+	} catch (err) {
+		res.status(400).json({ error: err });
+	}
+});
+
+// Get list of all the Finanacial Aids
+app.get("/admin/allaids", verifyToken, async (req, res) => {
+	const aids = await Aids.find({});
+	try {
+		if (req.user.googleId === "RApgwKTGONMRo7D2VY9LZvUEggE2")
+			return res.status(200).json({ message: aids });
+		else return res.status(400).json({ error: "Unauthorized Route" });
+	} catch (err) {
+		res.status(400).json({ error: err });
 	}
 });
 
@@ -227,6 +257,7 @@ app.patch("/chosereward", verifyToken, async (req, res) => {
 	}
 });
 
+// Add A Bug
 app.post("/bug", async (req, res) => {
 	const { email, bug } = req.body;
 	if (!email || !bug)
@@ -244,6 +275,7 @@ app.post("/bug", async (req, res) => {
 	}
 });
 
+// Submit Financial Aid Application
 app.post("/aid", verifyToken, async (req, res) => {
 	const { courseLink, description } = req.body;
 	const email = req.user.email;
