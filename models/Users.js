@@ -12,7 +12,7 @@ const Users = new Schema({
 	},
 	rewardDomain: {
 		type: String,
-		default: null,
+		default: "no domain",
 	},
 	ratedCourses: [
 		{

@@ -7,7 +7,7 @@ const Users = require("./models/Users");
 const Courses = require("./models/Courses");
 const jwt = require("jsonwebtoken");
 const PORT = process.env.PORT || 8080;
-// const sendMail = require("./mailScript");s
+// const sendMail = require("./mailScript");
 
 const app = express();
 app.use(bodyParser.json());
@@ -76,13 +76,14 @@ app.post("/user", async (req, res) => {
 	const { email, googleId } = req.body;
 	const isUserThere = await Users.findOne({ email });
 	try {
-		console.log(isUserThere.id, "Hello3");
-		const token = jwt.sign({ id: isUserThere.id }, process.env.TOKEN_SECRET);
-		if (isUserThere)
+		if (isUserThere) {
+			const token = jwt.sign({ id: isUserThere.id }, process.env.TOKEN_SECRET);
 			return res.status(200).json({ message: "Welcome Back!", token });
+		}
 		const newUser = new Users({ email, googleId });
 		const savedUser = await newUser.save();
 		try {
+			const token = jwt.sign({ id: savedUser.id }, process.env.TOKEN_SECRET);
 			res.status(200).json({ message: "User Created Successfully!", token });
 		} catch (err) {
 			res
@@ -204,16 +205,15 @@ app.patch("/update", verifyToken, async (req, res) => {
 // Update Reward Domain
 app.patch("/chosereward", verifyToken, async (req, res) => {
 	try {
-		console.log(req.user, "Hello4");
 		chosenReward = await Users.updateOne(
-			{ id: req.user.id },
+			{ _id: req.user.id },
 			{
 				$set: {
 					rewardDomain: req.body.rewardDomain,
 				},
 			}
 		);
-		res.status(200).json({ message: req.user.id });
+		res.status(200).json({ message: "Domain Selected Successfully!" });
 	} catch (err) {
 		res
 			.status(400)
