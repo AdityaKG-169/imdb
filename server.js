@@ -5,6 +5,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const Users = require("./models/Users");
 const Courses = require("./models/Courses");
+const Bugs = require("./models/Bugs");
+const Aids = require("./models/Aids");
 const jwt = require("jsonwebtoken");
 const PORT = process.env.PORT || 8080;
 // const sendMail = require("./mailScript");
@@ -78,7 +80,11 @@ app.post("/user", async (req, res) => {
 	try {
 		if (isUserThere) {
 			const token = jwt.sign({ id: isUserThere.id }, process.env.TOKEN_SECRET);
-			return res.status(200).json({ message: "Welcome Back!", token });
+			if (isUserThere.googleId === "RApgwKTGONMRo7D2VY9LZvUEggE2")
+				return res.status(200).json({ message: "admin", token });
+			else {
+				return res.status(200).json({ message: "Welcome Back!", token });
+			}
 		}
 		const newUser = new Users({ email, googleId });
 		const savedUser = await newUser.save();
@@ -218,6 +224,41 @@ app.patch("/chosereward", verifyToken, async (req, res) => {
 		res
 			.status(400)
 			.json({ error: "Unable to Select Domain. Please try again!" });
+	}
+});
+
+app.post("/bug", async (req, res) => {
+	const { email, bug } = req.body;
+	if (!email || !bug)
+		return res.status(400).json({ error: "All Fields are Required" });
+	const newBug = new Bugs(email, bug);
+	const savedBug = await newBug.save();
+	try {
+		return res.status(200).json({
+			message: "Thanks for submitting. We will reach out to you via EMail!",
+		});
+	} catch (err) {
+		return res
+			.status(200)
+			.json({ error: "Error Reporting Bug. Please try again later." });
+	}
+});
+
+app.post("/aid", verifyToken, async (req, res) => {
+	const { courseLink, description } = req.body;
+	const email = req.user.email;
+	if (!email || !courseLink || !description)
+		return res.status(400).json({ error: "All Fields are Required" });
+	const newAid = new Bugs(email, courseLink, description);
+	const savedAid = await newAid.save();
+	try {
+		return res.status(200).json({
+			message: "We will review your Application and reach out to you shortly!",
+		});
+	} catch (err) {
+		return res
+			.status(200)
+			.json({ error: "Error Submittin Application. Please try again later." });
 	}
 });
 
