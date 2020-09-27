@@ -9,7 +9,6 @@ const Bugs = require("./models/Bugs");
 const Aids = require("./models/Aids");
 const jwt = require("jsonwebtoken");
 const PORT = process.env.PORT || 8080;
-// const sendMail = require("./mailScript");
 
 const app = express();
 app.use(bodyParser.json());
@@ -277,11 +276,11 @@ app.post("/bug", async (req, res) => {
 
 // Submit Financial Aid Application
 app.post("/aid", verifyToken, async (req, res) => {
-	const { courseLink, description } = req.body;
+	const { courseLink, description, supportUs } = req.body;
 	const email = req.user.email;
-	if (!email || !courseLink || !description)
+	if (!email || !courseLink || !description || !supportUs)
 		return res.status(400).json({ error: "All Fields are Required" });
-	const newAid = new Bugs(email, courseLink, description);
+	const newAid = new Bugs(email, courseLink, description, supportUs);
 	const savedAid = await newAid.save();
 	try {
 		return res.status(200).json({
@@ -290,7 +289,7 @@ app.post("/aid", verifyToken, async (req, res) => {
 	} catch (err) {
 		return res
 			.status(200)
-			.json({ error: "Error Submittin Application. Please try again later." });
+			.json({ error: "Error Submitting Application. Please try again later." });
 	}
 });
 

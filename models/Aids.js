@@ -15,6 +15,10 @@ const Aids = new Schema({
 		type: String,
 		required: true,
 	},
+	supportUs: {
+		type: String,
+		required: true,
+	},
 });
 
 module.exports = mongoose.model("Aids", Aids);
